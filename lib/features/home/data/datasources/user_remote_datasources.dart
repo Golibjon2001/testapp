@@ -19,12 +19,20 @@ class UserRemoteDataSourcesImpl extends UserRemoteDataSources {
         return ((response.data as List<dynamic>).map((e) => UserModel.fromJson(e)).toList());
       } else {
         if (response.data is Map) {
+          throw ServerException(
+                  statusCode: response.statusCode!,
+                  errorMessage: (response.data as Map).values.isNotEmpty
+                      ? (response.data as Map).values.first
+                      : "LocaleKeys.error_while_get_movies")
+              .toString();
+        } else {
           throw ServerException(statusCode: response.statusCode!, errorMessage: response.data.toString());
         }
       }
     } on ServerException {
       rethrow;
+    }  on Exception catch (e) {
+      throw ParsingException(errorMessage: e.toString());
     }
-    throw UnimplementedError();
   }
 }

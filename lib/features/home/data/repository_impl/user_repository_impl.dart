@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:testapp/core/exceptions/exceptions.dart';
 import 'package:testapp/core/exceptions/failures.dart';
 import 'package:testapp/core/utils/either.dart';
 import 'package:testapp/features/home/data/datasources/user_remote_datasources.dart';
@@ -15,8 +16,12 @@ class UserRepositoryImpl extends UserRepository {
     try {
       final result = await dataSources.getUsers();
       return Right(result);
-    } on DioException {
-      return Left(DioFailure());
+    } on DioError{
+      throw Left(DioFailure());
+    } on ParsingException catch(e){
+      return Left(ParsingFailure(errorMessage:e.errorMessage));
+    } on ServerException catch (e) {
+      return Left(ServerFailure(errorMessage: e.errorMessage, statusCode: e.statusCode));
     }
   }
 }
