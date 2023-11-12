@@ -23,7 +23,7 @@ class UserRemoteDataSourcesImpl extends UserRemoteDataSources {
                   statusCode: response.statusCode!,
                   errorMessage: (response.data as Map).values.isNotEmpty
                       ? (response.data as Map).values.first
-                      : "LocaleKeys.error_while_get_movies")
+                      : "LocaleKeys.error_while_get_user")
               .toString();
         } else {
           throw ServerException(statusCode: response.statusCode!, errorMessage: response.data.toString());
